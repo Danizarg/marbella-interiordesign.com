@@ -32,7 +32,7 @@ export function ImmersiveReveal() {
             scrollTrigger: {
               trigger: sectionRef.current,
               start: "top top",
-              end: "+=180%",
+              end: "+=100%",
               scrub: 0.6,
               pin: true,
               anticipatePin: 1,

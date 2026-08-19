@@ -166,9 +166,11 @@ Google Fonts loaded via `next/font/google`: **Fraunces** (display serif) and
 - CTA scroll indicator.
 
 ### ScrollStory — `components/sections/ScrollStory.tsx`
-- Sticky headline area; scroll advances between 4 words (Light, Material,
-  Proportion, Atmosphere) and crossfades the accompanying render.
-- Final statement: "See every decision before it becomes permanent."
+- Full-viewport image with dark gradient overlay; scroll advances between 4
+  beat images (Light, Material, Proportion, Atmosphere) with crossfaded
+  renders as background. Statement headline sits at top, active beat word
+  animates in at bottom-left, closing line at bottom-right. Fills the
+  viewport at every scroll position — no empty canvas by construction.
 
 ### FeatureExplorer — `components/sections/FeatureExplorer.tsx`
 - `PillSelector` with 4 tabs. Active tab drives image + copy crossfade.
@@ -304,6 +306,29 @@ Motion:
   consolidate.
 - No CMS / no i18n. Site is single-language (English) for the demo.
 
+## Post-launch fix notes (session 2)
+
+- **`overflow-x: hidden` on `body` broke every `position: sticky` on the
+  page.** It made the viewport itself scrollable in that axis and voided all
+  descendant sticky containing blocks. Switched `body` to `overflow-x: clip`
+  in `app/globals.css` — sticky now works. Never re-introduce
+  `overflow-x: hidden` on `html` or `body`.
+- **ScrollStory was rewritten from a two-column layout to a full-viewport
+  image-with-overlay layout.** The two-column version's flex-centered content
+  left large empty canvas bands visible during the sticky release phase.
+  Full-bleed background prevents empty space by construction.
+- **`whileInView` viewport thresholds lowered** from `amount: 0.5–0.6` to
+  `amount: 0.15–0.2` with a `-80px` bottom margin across `RevealText`,
+  `FadeIn`, and `SectionEyebrow`. Prior thresholds were too strict —
+  jump-scroll navigation left content stuck at initial `translateY(110%)`
+  because the observer never fired.
+- **Page total height reduced from ~21k → ~18.7k px** by shrinking
+  `section-y` padding, `ScrollStory` per-beat height, `ImmersiveReveal` pin
+  duration, and `Statement` vertical padding.
+- **`.claude/launch.json` only defines `dev`** (previously `start` triggered
+  `next start` and failed without a prior build). The `start` npm script now
+  runs `next build && next start` as a fallback if invoked directly.
+
 ## Technical Debt
 
 - `portfolio.ts` uses neutral labels — could later carry real project titles
@@ -347,7 +372,7 @@ npm run lint
 
 ## Last Session Summary
 
-**Date:** 2026-08-19
+**Date:** 2026-08-20
 
 **What was completed:**
 - Green-field bootstrap of the project (was an empty repo with only `.git`).

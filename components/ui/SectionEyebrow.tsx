@@ -22,7 +22,7 @@ export function SectionEyebrow({
       )}
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.6 }}
+      viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
       transition={{ duration: 0.9, ease: easePremium }}
     >
       <span

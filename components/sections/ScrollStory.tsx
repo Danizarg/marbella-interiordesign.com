@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
-import { easePremium } from "@/lib/motion";
 import { RevealText } from "@/components/motion/RevealText";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 
@@ -13,34 +12,6 @@ const beats = [
   { word: "Proportion.", image: "/renders/render-21.jpg" },
   { word: "Atmosphere.", image: "/renders/render-24.jpg" },
 ];
-
-function Word({
-  progress,
-  word,
-  start,
-  end,
-}: {
-  progress: MotionValue<number>;
-  word: string;
-  start: number;
-  end: number;
-}) {
-  const mid = start + (end - start) / 2;
-  const opacity = useTransform(
-    progress,
-    [start, mid - 0.03, mid + 0.03, end],
-    [0, 1, 1, 0],
-  );
-  const y = useTransform(progress, [start, mid, end], [30, 0, -30]);
-  return (
-    <motion.div
-      style={{ opacity, y }}
-      className="absolute left-0 top-0 font-display font-light leading-[1] tracking-display"
-    >
-      <span className="text-[clamp(3rem,7vw,6rem)]">{word}</span>
-    </motion.div>
-  );
-}
 
 function Frame({
   progress,
@@ -58,10 +29,10 @@ function Frame({
   const mid = start + (end - start) / 2;
   const opacity = useTransform(
     progress,
-    [start, mid - 0.05, mid + 0.05, end],
+    [Math.max(0, start - 0.02), mid - 0.06, mid + 0.06, Math.min(1, end + 0.02)],
     [0, 1, 1, 0],
   );
-  const scale = useTransform(progress, [start, end], [1.08, 1]);
+  const scale = useTransform(progress, [start, end], [1.06, 1]);
   return (
     <motion.div style={{ opacity, scale }} className="absolute inset-0">
       <Image
@@ -69,10 +40,38 @@ function Frame({
         alt=""
         fill
         priority={eager}
-        sizes="(min-width:768px) 55vw, 100vw"
+        sizes="100vw"
         className="object-cover"
       />
     </motion.div>
+  );
+}
+
+function Word({
+  progress,
+  word,
+  start,
+  end,
+}: {
+  progress: MotionValue<number>;
+  word: string;
+  start: number;
+  end: number;
+}) {
+  const mid = start + (end - start) / 2;
+  const opacity = useTransform(
+    progress,
+    [start, mid - 0.05, mid + 0.05, end],
+    [0, 1, 1, 0],
+  );
+  const y = useTransform(progress, [start, mid, end], [24, 0, -24]);
+  return (
+    <motion.span
+      style={{ opacity, y }}
+      className="absolute left-0 top-0 block font-display font-light leading-[1] tracking-display text-white"
+    >
+      <span className="text-[clamp(3.5rem,9vw,7.5rem)]">{word}</span>
+    </motion.span>
   );
 }
 
@@ -87,20 +86,40 @@ export function ScrollStory() {
     <section
       id="story"
       ref={ref}
-      className="relative bg-canvas"
-      style={{ height: `${beats.length * 100}vh` }}
+      className="relative bg-night text-white"
+      style={{ height: `${beats.length * 90}vh` }}
     >
-      <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
-        <div className="container-page grid w-full grid-cols-1 items-center gap-10 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <SectionEyebrow>Why 3D visualization</SectionEyebrow>
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
+        {/* Full-viewport image background — always fills sticky */}
+        <div className="absolute inset-0">
+          {beats.map((b, i) => (
+            <Frame
+              key={b.image}
+              progress={scrollYProgress}
+              image={b.image}
+              start={i / beats.length}
+              end={(i + 1) / beats.length}
+              eager={i === 0}
+            />
+          ))}
+        </div>
+
+        {/* Dark gradient overlay for legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-night/70 via-night/30 to-night/80" />
+
+        {/* Text overlay */}
+        <div className="container-page relative z-10 flex h-full flex-col justify-between pt-[calc(var(--header-height)+3rem)] pb-16 md:pb-24">
+          <div className="max-w-2xl">
+            <SectionEyebrow invert>Why 3D visualization</SectionEyebrow>
             <RevealText
               as="h2"
-              className="display-xl mt-6 max-w-[14ch]"
+              className="display-xl mt-6 max-w-[15ch] text-white"
               lines={["Every detail.", "Decided before", "construction begins."]}
             />
+          </div>
 
-            <div className="relative mt-14 h-[6.5rem] md:h-[7.5rem]">
+          <div className="flex flex-col items-start gap-10 md:flex-row md:items-end md:justify-between">
+            <div className="relative h-[6rem] w-full md:h-[8rem] md:w-auto">
               {beats.map((b, i) => (
                 <Word
                   key={b.word}
@@ -112,30 +131,9 @@ export function ScrollStory() {
               ))}
             </div>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 1, ease: easePremium, delay: 0.3 }}
-              className="mt-16 max-w-md text-sm leading-[1.6] text-muted md:text-base"
-            >
+            <p className="max-w-xs text-sm leading-[1.55] text-white/70 md:text-right md:text-[15px]">
               See every decision before it becomes permanent.
-            </motion.p>
-          </div>
-
-          <div className="md:col-span-7">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-stone/50 md:aspect-[5/4]">
-              {beats.map((b, i) => (
-                <Frame
-                  key={b.image}
-                  progress={scrollYProgress}
-                  image={b.image}
-                  start={i / beats.length}
-                  end={(i + 1) / beats.length}
-                  eager={i === 0}
-                />
-              ))}
-            </div>
+            </p>
           </div>
         </div>
       </div>

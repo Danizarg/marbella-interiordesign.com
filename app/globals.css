@@ -31,7 +31,10 @@ body {
   color: rgb(var(--color-ink));
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   min-height: 100%;
-  overflow-x: hidden;
+}
+
+body {
+  overflow-x: clip;
 }
 
 body {
@@ -51,10 +54,10 @@ body {
     @apply mx-auto w-full max-w-reading;
   }
   .section-y {
-    @apply py-24 md:py-32 lg:py-40;
+    @apply py-20 md:py-24 lg:py-28;
   }
   .section-y-tight {
-    @apply py-16 md:py-20 lg:py-24;
+    @apply py-14 md:py-16 lg:py-20;
   }
   .eyebrow {
     @apply font-sans text-[11px] uppercase tracking-eyebrow text-muted;

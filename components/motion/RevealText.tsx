@@ -47,7 +47,7 @@ export function RevealText({
       custom={delay}
       initial="hidden"
       whileInView="show"
-      viewport={{ once, amount: 0.5 }}
+      viewport={{ once, amount: 0.15, margin: "0px 0px -80px 0px" }}
     >
       {lines.map((text, i) => (
         <span key={i} className="reveal-line">
