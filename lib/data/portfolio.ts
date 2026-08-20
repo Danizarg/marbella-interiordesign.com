@@ -1,73 +1,62 @@
+import { img, type ConceptImage } from "./imagery";
+
 export type PortfolioItem = {
   id: string;
-  image: string;
+  image: ConceptImage;
   label: string;
   meta: string;
-  layout: "wide" | "right-small" | "full-bleed" | "portrait" | "split-left" | "split-right" | "cinematic";
+  /** Editorial slot — drives the varied rhythm of the sequence. */
+  layout: "opening" | "offset" | "bleed" | "pair-a" | "pair-b" | "tall" | "closing";
 };
 
 export const portfolio: PortfolioItem[] = [
   {
-    id: "residence-i",
-    image: "/renders/render-01.jpg",
-    label: "Residence I",
-    meta: "Interior visualization",
-    layout: "wide",
+    id: "i",
+    image: img.stoneLiving,
+    label: "Stone, timber, light",
+    meta: "Living volume",
+    layout: "opening",
   },
   {
-    id: "residence-ii",
-    image: "/renders/render-09.jpg",
-    label: "Residence II",
-    meta: "Living room study",
-    layout: "right-small",
+    id: "ii",
+    image: img.archNiche,
+    label: "Plaster and shadow",
+    meta: "Interior study",
+    layout: "offset",
   },
   {
-    id: "residence-iii",
-    image: "/renders/render-11.jpg",
-    label: "Residence III",
-    meta: "Full architectural render",
-    layout: "full-bleed",
+    id: "iii",
+    image: img.poolTerrace,
+    label: "Inside becomes outside",
+    meta: "Terrace threshold",
+    layout: "bleed",
   },
   {
-    id: "residence-iv",
-    image: "/renders/render-13.jpg",
-    label: "Residence IV",
-    meta: "Detail composition",
-    layout: "split-left",
+    id: "iv",
+    image: img.travertineStair,
+    label: "Travertine and oak",
+    meta: "Circulation detail",
+    layout: "pair-a",
   },
   {
-    id: "residence-v",
-    image: "/renders/render-14.jpg",
-    label: "Residence V",
+    id: "v",
+    image: img.materialStudy,
+    label: "Surface at true scale",
     meta: "Material study",
-    layout: "split-right",
+    layout: "pair-b",
   },
   {
-    id: "residence-vi",
-    image: "/renders/render-16.jpg",
-    label: "Residence VI",
-    meta: "Volume and light",
-    layout: "cinematic",
+    id: "vi",
+    image: img.villaThreshold,
+    label: "A door to the sea",
+    meta: "Threshold",
+    layout: "tall",
   },
   {
-    id: "residence-vii",
-    image: "/renders/render-18.jpg",
-    label: "Residence VII",
-    meta: "Bedroom composition",
-    layout: "portrait",
-  },
-  {
-    id: "residence-viii",
-    image: "/renders/render-19.jpg",
-    label: "Residence VIII",
-    meta: "Bathroom study",
-    layout: "portrait",
-  },
-  {
-    id: "residence-ix",
-    image: "/renders/render-20.jpg",
-    label: "Residence IX",
-    meta: "Kitchen visualization",
-    layout: "full-bleed",
+    id: "vii",
+    image: img.villaEvening,
+    label: "The room after dark",
+    meta: "Evening light",
+    layout: "closing",
   },
 ];

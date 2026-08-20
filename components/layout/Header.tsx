@@ -56,7 +56,7 @@ export function Header({ proposalMode }: Props) {
               {studio.short}
             </span>
             {proposalMode && (
-              <span className="hidden rounded-full border border-ink/15 px-2.5 py-0.5 text-[10px] uppercase tracking-eyebrow text-muted md:inline-block">
+              <span className="hidden border-l border-ink/20 pl-3 text-[10px] uppercase tracking-eyebrow text-muted md:inline-block">
                 Redesign Concept
               </span>
             )}
@@ -77,7 +77,7 @@ export function Header({ proposalMode }: Props) {
           <div className="flex items-center gap-3">
             <a
               href="#contact"
-              className="hidden rounded-full bg-ink px-4 py-2 text-[12px] font-medium text-canvas transition-all duration-300 ease-premium hover:-translate-y-0.5 md:inline-flex"
+              className="hidden bg-ink px-5 py-2.5 text-[12px] font-medium tracking-wide text-canvas transition-colors duration-300 ease-premium hover:bg-ink/85 md:inline-flex"
             >
               Start a Project
             </a>

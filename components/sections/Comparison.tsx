@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { RevealText } from "@/components/motion/RevealText";
 import { easePremium } from "@/lib/motion";
+import { img } from "@/lib/data/imagery";
 
 export function Comparison() {
   const [pos, setPos] = useState(50);
@@ -40,20 +40,19 @@ export function Comparison() {
   }, [drag, update]);
 
   return (
-    <section className="bg-canvas section-y">
+    <section className="bg-canvas section-y-tight">
       <div className="container-page">
-        <div className="mb-14 grid gap-8 md:grid-cols-12">
+        <div className="rule-top mb-14 grid gap-8 md:grid-cols-12">
           <div className="md:col-span-6">
-            <SectionEyebrow>Concept · Render</SectionEyebrow>
             <RevealText
               as="h2"
-              className="display-xl mt-6 max-w-[14ch]"
-              lines={["Move between", "concept and reality."]}
+              className="display-xl max-w-[14ch]"
+              lines={["Move between", "study and render."]}
             />
           </div>
-          <p className="max-w-lg self-end text-sm text-muted md:col-span-5 md:col-start-8 md:text-base">
-            Compare the early architectural composition with the finalised
-            photorealistic render. Drag the divider or tap either side.
+          <p className="max-w-sm self-end text-[15px] leading-[1.6] text-muted md:col-span-4 md:col-start-9">
+            The same room as an early tonal study and as a resolved
+            visualization. Drag the divider.
           </p>
         </div>
 
@@ -63,7 +62,7 @@ export function Comparison() {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 1, ease: easePremium }}
           ref={wrapRef}
-          className="relative aspect-[16/10] w-full select-none overflow-hidden rounded-md bg-stone/40"
+          className="relative aspect-[4/5] w-full select-none overflow-hidden bg-stone/40 sm:aspect-[16/10]"
           onMouseDown={(e) => {
             setDrag(true);
             update(e.clientX);
@@ -73,17 +72,22 @@ export function Comparison() {
             update(e.touches[0].clientX);
           }}
         >
-          {/* Base: render */}
+          {/* Resolved render */}
           <Image
-            src="/renders/render-06.jpg"
-            alt="Photorealistic 3D render"
+            src={img.poolTerrace.src}
+            alt="Resolved photorealistic visualization"
             fill
+            quality={88}
             sizes="100vw"
             className="object-cover"
-            priority={false}
+            style={{ objectPosition: img.poolTerrace.focal }}
           />
 
-          {/* Overlay: concept */}
+          {/*
+            The left side is the same frame under a tonal-study treatment — a
+            genuine desaturation pass, not a second image passed off as an
+            earlier deliverable.
+          */}
           <div
             className="absolute inset-0"
             style={{
@@ -92,24 +96,24 @@ export function Comparison() {
             }}
           >
             <Image
-              src="/renders/render-12.jpg"
-              alt="Concept visualization"
+              src={img.poolTerrace.src}
+              alt="Early tonal study of the same composition"
               fill
+              quality={88}
               sizes="100vw"
               className="object-cover"
               style={{
-                filter: "grayscale(0.35) contrast(0.95) brightness(0.98)",
+                objectPosition: img.poolTerrace.focal,
+                filter: "grayscale(1) contrast(0.82) brightness(1.06)",
               }}
             />
-            <div className="absolute inset-0 bg-canvas/10 mix-blend-multiply" />
           </div>
 
-          {/* Labels */}
-          <div className="absolute left-5 top-5 rounded-full bg-ink/70 px-3 py-1 text-[11px] uppercase tracking-eyebrow text-canvas backdrop-blur-sm">
-            Concept
+          <div className="absolute left-5 top-5 bg-ink/75 px-3 py-2 text-[10px] uppercase tracking-eyebrow text-canvas backdrop-blur-sm">
+            Study
           </div>
-          <div className="absolute right-5 top-5 rounded-full bg-canvas/85 px-3 py-1 text-[11px] uppercase tracking-eyebrow text-ink backdrop-blur-sm">
-            3D Render
+          <div className="absolute right-5 top-5 bg-canvas/90 px-3 py-2 text-[10px] uppercase tracking-eyebrow text-ink backdrop-blur-sm">
+            Render
           </div>
 
           {/* Handle */}

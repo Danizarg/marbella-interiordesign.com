@@ -27,7 +27,7 @@ export function ProcessExplorer() {
 
         <div className="grid grid-cols-1 gap-14 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7">
-            <div className="relative aspect-[16/11] w-full overflow-hidden rounded-md bg-white/5">
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-white/5 sm:aspect-[16/11]">
               <AnimatePresence mode="sync">
                 <motion.div
                   key={item.key}
@@ -38,13 +38,15 @@ export function ProcessExplorer() {
                   className="absolute inset-0"
                 >
                   <Image
-                    src={item.image}
+                    src={item.image.src}
                     alt={item.title}
                     fill
+                    quality={86}
                     sizes="(min-width:768px) 60vw, 100vw"
                     className="object-cover"
+                    style={{ objectPosition: item.image.focal }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -129,7 +131,7 @@ export function ProcessExplorer() {
                   type="button"
                   onClick={() => setActive(s.key)}
                   className={cn(
-                    "snap-start whitespace-nowrap rounded-full border px-4 py-2 text-[12px] transition-colors",
+                    "snap-start whitespace-nowrap border px-4 py-2 text-[12px] transition-colors",
                     isActive
                       ? "border-white bg-white text-ink"
                       : "border-white/20 text-white/70",

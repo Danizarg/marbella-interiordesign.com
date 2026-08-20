@@ -1,9 +1,11 @@
+import { img, type ConceptImage } from "./imagery";
+
 export type Stage = {
   n: string;
   key: string;
   title: string;
   body: string;
-  image: string;
+  image: ConceptImage;
 };
 
 export const process: Stage[] = [
@@ -12,41 +14,41 @@ export const process: Stage[] = [
     key: "brief",
     title: "Brief",
     body: "Understand the property, architecture and ambition.",
-    image: "/renders/render-05.jpg",
+    image: img.villaTerrace,
   },
   {
     n: "02",
     key: "design",
     title: "Design",
     body: "Layouts and spatial decisions begin taking shape.",
-    image: "/renders/render-10.jpg",
+    image: img.warmLounge,
   },
   {
     n: "03",
     key: "model",
     title: "Model",
     body: "The architecture becomes a precise three-dimensional environment.",
-    image: "/renders/render-17.jpg",
+    image: img.stoneLiving,
   },
   {
     n: "04",
     key: "material",
     title: "Material",
     body: "Stone, timber, textile and finishes are refined.",
-    image: "/renders/render-22.jpg",
+    image: img.materialStudy,
   },
   {
     n: "05",
     key: "light",
     title: "Light",
     body: "Natural and artificial light define the atmosphere.",
-    image: "/renders/render-08.jpg",
+    image: img.lightStudy,
   },
   {
     n: "06",
     key: "render",
     title: "Render",
     body: "The concept becomes visually tangible.",
-    image: "/renders/render-02.jpg",
+    image: img.travertineCorridor,
   },
 ];

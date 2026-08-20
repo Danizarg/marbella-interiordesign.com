@@ -4,7 +4,7 @@ import { RevealText } from "@/components/motion/RevealText";
 
 export function Statement() {
   return (
-    <section className="bg-night py-24 text-white md:py-32">
+    <section className="bg-night section-y-air text-white">
       <div className="container-page">
         <RevealText
           as="h2"

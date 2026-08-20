@@ -3,14 +3,29 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
-import { RevealText } from "@/components/motion/RevealText";
-import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
+import { img, type ConceptImage } from "@/lib/data/imagery";
 
-const beats = [
-  { word: "Light.", image: "/renders/render-04.jpg" },
-  { word: "Material.", image: "/renders/render-15.jpg" },
-  { word: "Proportion.", image: "/renders/render-21.jpg" },
-  { word: "Atmosphere.", image: "/renders/render-24.jpg" },
+const beats: { word: string; note: string; image: ConceptImage }[] = [
+  {
+    word: "Light",
+    note: "How the room reads at eight in the morning, and again at dusk.",
+    image: img.lightStudy,
+  },
+  {
+    word: "Material",
+    note: "Stone, plaster and timber judged at their true scale.",
+    image: img.materialStudy,
+  },
+  {
+    word: "Proportion",
+    note: "Volume and sightline resolved as architecture.",
+    image: img.stoneLiving,
+  },
+  {
+    word: "Atmosphere",
+    note: "The feeling of the space, before it exists.",
+    image: img.villaEvening,
+  },
 ];
 
 function Frame({
@@ -21,7 +36,7 @@ function Frame({
   eager,
 }: {
   progress: MotionValue<number>;
-  image: string;
+  image: ConceptImage;
   start: number;
   end: number;
   eager?: boolean;
@@ -32,46 +47,60 @@ function Frame({
     [Math.max(0, start - 0.02), mid - 0.06, mid + 0.06, Math.min(1, end + 0.02)],
     [0, 1, 1, 0],
   );
-  const scale = useTransform(progress, [start, end], [1.06, 1]);
+  const scale = useTransform(progress, [start, end], [1.08, 1]);
   return (
     <motion.div style={{ opacity, scale }} className="absolute inset-0">
       <Image
-        src={image}
+        src={image.src}
         alt=""
         fill
         priority={eager}
+        quality={86}
         sizes="100vw"
         className="object-cover"
+        style={{ objectPosition: image.focal }}
       />
     </motion.div>
   );
 }
 
-function Word({
+function Beat({
   progress,
   word,
+  note,
+  index,
   start,
   end,
 }: {
   progress: MotionValue<number>;
   word: string;
+  note: string;
+  index: number;
   start: number;
   end: number;
 }) {
   const mid = start + (end - start) / 2;
   const opacity = useTransform(
     progress,
-    [start, mid - 0.05, mid + 0.05, end],
+    [start, mid - 0.06, mid + 0.06, end],
     [0, 1, 1, 0],
   );
-  const y = useTransform(progress, [start, mid, end], [24, 0, -24]);
+  const y = useTransform(progress, [start, mid, end], [40, 0, -40]);
   return (
-    <motion.span
+    <motion.div
       style={{ opacity, y }}
-      className="absolute left-0 top-0 block font-display font-light leading-[1] tracking-display text-white"
+      className="absolute inset-x-0 bottom-0 flex flex-col gap-4"
     >
-      <span className="text-[clamp(3.5rem,9vw,7.5rem)]">{word}</span>
-    </motion.span>
+      <span className="font-sans text-[10px] tabular-nums tracking-eyebrow text-white/60">
+        0{index + 1} — 04
+      </span>
+      <span className="block font-display font-light leading-[0.95] tracking-display text-white text-[clamp(3rem,8vw,6.5rem)]">
+        {word}
+      </span>
+      <span className="max-w-sm text-[15px] leading-[1.55] text-white/80">
+        {note}
+      </span>
+    </motion.div>
   );
 }
 
@@ -87,14 +116,13 @@ export function ScrollStory() {
       id="story"
       ref={ref}
       className="relative bg-night text-white"
-      style={{ height: `${beats.length * 90}vh` }}
+      style={{ height: `${beats.length * 95}vh` }}
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
-        {/* Full-viewport image background — always fills sticky */}
         <div className="absolute inset-0">
           {beats.map((b, i) => (
             <Frame
-              key={b.image}
+              key={b.word}
               progress={scrollYProgress}
               image={b.image}
               start={i / beats.length}
@@ -104,36 +132,34 @@ export function ScrollStory() {
           ))}
         </div>
 
-        {/* Dark gradient overlay for legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-night/70 via-night/30 to-night/80" />
+        {/*
+          Directional scrim: strong at the bottom where the beat copy sits,
+          light at the top. The previous three-stop wash flattened every image
+          into mud.
+        */}
+        <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/35 to-night/45" />
 
-        {/* Text overlay */}
-        <div className="container-page relative z-10 flex h-full flex-col justify-between pt-[calc(var(--header-height)+3rem)] pb-16 md:pb-24">
-          <div className="max-w-2xl">
-            <SectionEyebrow invert>Why 3D visualization</SectionEyebrow>
-            <RevealText
-              as="h2"
-              className="display-xl mt-6 max-w-[15ch] text-white"
-              lines={["Every detail.", "Decided before", "construction begins."]}
-            />
+        <div className="container-page relative z-10 flex h-full flex-col justify-between pt-[calc(var(--header-height)+3.5rem)] pb-[10vh]">
+          <div className="max-w-xl">
+            <div className="rule-top-invert">
+              <h2 className="display-lg max-w-[15ch] text-white">
+                Every decision made before anything is built.
+              </h2>
+            </div>
           </div>
 
-          <div className="flex flex-col items-start gap-10 md:flex-row md:items-end md:justify-between">
-            <div className="relative h-[6rem] w-full md:h-[8rem] md:w-auto">
-              {beats.map((b, i) => (
-                <Word
-                  key={b.word}
-                  progress={scrollYProgress}
-                  word={b.word}
-                  start={i / beats.length}
-                  end={(i + 1) / beats.length}
-                />
-              ))}
-            </div>
-
-            <p className="max-w-xs text-sm leading-[1.55] text-white/70 md:text-right md:text-[15px]">
-              See every decision before it becomes permanent.
-            </p>
+          <div className="relative h-[16rem] md:h-[18rem]">
+            {beats.map((b, i) => (
+              <Beat
+                key={b.word}
+                progress={scrollYProgress}
+                word={b.word}
+                note={b.note}
+                index={i}
+                start={i / beats.length}
+                end={(i + 1) / beats.length}
+              />
+            ))}
           </div>
         </div>
       </div>

@@ -231,16 +231,17 @@ live production URL.
 
 All in `/public`:
 
-- `public/brand/logo.png` — original client logo, downloaded from jimcdn CMS
-  (source of truth on the client's own site).
-- `public/renders/render-01.jpg` … `render-28.jpg` — 28 real architectural
-  renders downloaded from the client's Jimdo CMS at ~1200–1900px width. Used
-  throughout hero, scroll story, feature explorer, portfolio, comparison,
-  process explorer.
+- `public/brand/logo.png` — original client logo, from the client's Jimdo CMS.
+- `public/concept/*.jpg` — **13 licensed concept images (Pexels), 2400–2560px
+  wide.** These drive the entire current visual layer. See **Imagery** below.
+- `public/renders/render-01.jpg` … `render-28.jpg` — the client's own renders.
+  **Retained in the repo but no longer referenced by any component.** See the
+  session-4 audit below for why.
 
-Asset selection map (which render appears where) lives in
-`lib/data/portfolio.ts`, `lib/data/features.ts`, and `lib/data/process.ts` so
-that swapping assets is a data-only change.
+The image manifest is `lib/data/imagery.ts`. Every image is declared once with
+its dimensions, provenance and focal point, and the section data files
+(`portfolio.ts`, `features.ts`, `process.ts`) reference it — so swapping in the
+client's real renders later is a single-file change plus a focal-point pass.
 
 ## Animation Architecture
 
@@ -346,6 +347,148 @@ Motion:
 - No Playwright / Vitest tests. Demo scope; add before productionising.
 - No CI (GitHub Actions) configured yet.
 
+## Session 4 — visual audit and redesign pass (2026-08-20)
+
+### What was actually wrong
+
+An independent audit of the deployed site found five problems, ranked by how
+much perceived quality each destroyed:
+
+**P0 — The imagery was unusable, and on this site the imagery _is_ the
+product.** Concretely, in the deployed build:
+- `render-01.jpg`, used as the **hero**, is an untextured *clay* render — a
+  work-in-progress lighting pass with no materials applied.
+- `render-15`, `render-18`, `render-22` are **3ds Max wireframe viewport
+  screenshots** (neon green/purple/red on black). They were displayed as
+  finished work in the Feature Explorer ("Materials"), the Portfolio
+  ("Residence VII"), and the Process Explorer ("Material").
+- `render-03`, `render-06`, `render-16`, `render-21` are untextured grey/beige
+  massing models; `render-03` additionally has letterbox bars baked in.
+- Much of the remainder is off-segment: dated restaurant/bar CGI (`04`, `08`,
+  `10`), ornate classical interiors with gold and chandeliers (`02`, `05`,
+  `17`, `20`, `24`), a purple-LED hotel bedroom (`23`), and a Marilyn Monroe
+  mural (`12`).
+- Only ~4 files were even plausibly usable, all ≤1000px, three of them
+  carrying a visible "marbella INTERIOR DESIGN" watermark.
+
+**Resolution ceiling was verified, not assumed.** The client's Jimdo CDN serves
+images through a `dimension=WxH` transform, so it was tested directly by
+requesting `dimension=4000x4000` for many image IDs. The originals cap out at
+**1820×1023**, and most return 1000×693 or smaller. There are no
+higher-resolution originals to recover. A 1000px file cannot carry a 1920px
+full-bleed section, which is why the old build looked soft everywhere.
+
+**P0 — The hero failed the "would this appear in a design portfolio"
+test.** A flat `rgba(10,10,12)` wash at 35→60% opacity crushed the whole frame
+instead of shaping contrast where the type sat; copy was dropped bottom-left
+over busy image content with no regard for where the image was calm; and it
+carried both a bouncing scroll indicator *and* an arrow CTA.
+
+**P1 — The Portfolio asserted provenance that could not be true.** The copy
+read "Every render below was produced for a real residential project" while
+displaying wireframe screenshots. That is both a design problem and an honesty
+problem, and it violates the content-honesty rule in `MASTER_PROMPT.md` §5.
+
+**P1 — Generic template/AI tells.** `rounded-full` pills throughout, uniform
+`section-y` padding on every single section (producing metronomic pacing with
+no compositional emphasis), and an identical "eyebrow → headline → paragraph"
+opener repeated in eight consecutive sections. `FeatureCards` was three
+identical rounded cards with a pointer-tilt effect — the single most
+template-looking element on the page.
+
+**P1 — Interactions without consequence.** `features.ts` declared a `focus`
+field that **no component ever read**; switching tabs only crossfaded a boxed
+image, so the interaction had no real payoff. `ScrollStory` layered
+`from-night/70 via-night/30 to-night/80` over already-dark images, flattening
+every frame to mud.
+
+### What changed
+
+- **Whole image layer replaced.** 13 curated Pexels images at 2400–2560px,
+  art-directed to one coherent world (travertine, limestone, timber, plaster,
+  warm Mediterranean light, restrained contemporary furniture). Deliberately
+  curated *down* — 13 strong images rather than 28 weak ones.
+- **`lib/data/imagery.ts` added** as a single manifest carrying dimensions,
+  provenance and per-image focal points, with responsive focal variants where
+  desktop and mobile need different crops.
+- **Hero rebuilt**: new image, two directional scrims (bottom + left) instead
+  of a flat wash, copy anchored in the calm region, a text-shadow for
+  guaranteed legibility, responsive `object-position` (desktop `50% 55%` /
+  mobile `62% 60%`), scroll-linked copy fade, and the redundant bouncing
+  indicator removed.
+- **ImmersiveReveal turned into the signature moment**: pin extended 100%→260%,
+  a genuine camera push (scale 1.25→1 across the full timeline) while the frame
+  opens 72%→100%, `Light / Material / Proportion / Detail` registering one at a
+  time via stagger, resolving on "Every decision, visible before construction
+  begins." Reduced-motion path sets the end state directly.
+- **FeatureExplorer given real consequence**: tabs became a typographic index
+  with an animated fill rule; each tab now applies its own `zoom` crop
+  (1.0–1.18) so the visual genuinely changes, not just the caption.
+- **Portfolio rebuilt as editorial rhythm**: seven plates at seven different
+  sizes/offsets (10-col opener → small right-offset portrait → full-bleed
+  escape → asymmetric pair → narrow centred pause → cinematic close), captions
+  moved below the image as editorial credits rather than hover overlays. False
+  provenance copy removed.
+- **Comparison made honest**: previously implied two separate deliverables
+  existed. Now shows the *same* frame under a genuine desaturation treatment,
+  labelled "Study / Render".
+- **FeatureCards de-templated**: three rounded tilt-cards → a numbered
+  typographic index against one sticky companion image.
+- **Design system**: pill buttons → squared; `rounded-md`/`rounded-lg` removed
+  from content surfaces (circular icon controls kept, which are legitimate);
+  three distinct vertical rhythms (`section-y`, `-tight`, `-air`) replacing one
+  uniform value; `rule-top` opener replacing the repeated eyebrow pattern.
+- **Proposal mode**: squared geometry, plus an honest disclosure that the
+  imagery is licensed placeholder work to be replaced by the studio's own
+  renders — framed as professional practice rather than a caveat.
+- `components/motion/PillSelector.tsx` **deleted** (orphaned after the
+  FeatureExplorer rework).
+
+### Imagery provenance
+
+Every image below is **CONCEPT IMAGERY — replace with client-owned assets
+before production.** All are Pexels-licensed (free for commercial use, no
+attribution required). None is another interior-design studio's project work
+presented as this client's.
+
+| File | Source | Intrinsic | Used in |
+| --- | --- | --- | --- |
+| `villa-terrace.jpg` | pexels 12715492 | 2560×1708 | Hero, Process 01 |
+| `travertine-corridor.jpg` | pexels 30205474 | 2560×4251 | ImmersiveReveal, Process 06 |
+| `stone-living.jpg` | pexels 6908501 | 2560×1707 | ScrollStory, Feature "Space", Portfolio, Process 03 |
+| `travertine-stair.jpg` | pexels 35361419 | 2560×3200 | Feature "Detail", Portfolio |
+| `marble-detail.jpg` | pexels 33599113 | 2400×2800 | Feature "Materials" |
+| `andalusian-vault.jpg` | pexels 8118021 | 2560×3840 | MarbellaSection |
+| `villa-evening.jpg` | pexels 12715585 | 2560×1707 | ScrollStory, Portfolio |
+| `light-study.jpg` | pexels 8533603 | 2560×3840 | ScrollStory, Feature "Lighting", Process 05 |
+| `material-study.jpg` | pexels 6825570 | 2560×3840 | ScrollStory, Portfolio, Process 04 |
+| `warm-lounge.jpg` | pexels 20337842 | 2560×1707 | FeatureCards, Process 02 |
+| `villa-threshold.jpg` | pexels 35438897 | 2560×3838 | Portfolio |
+| `pool-terrace.jpg` | pexels 12715498 | 2560×1708 | Portfolio, Comparison |
+| `arch-niche.jpg` | pexels 6615806 | 2560×3835 | Portfolio |
+
+### Remaining weaknesses (honest)
+
+- **Visual QA was structural, not pixel-level.** This environment could not
+  produce screenshots, and — more limiting — the browser tab never composited,
+  so layout did not run: every `getBoundingClientRect()` returned 0 and the
+  accessibility tree came back empty. What *was* verified: production build,
+  TypeScript, zero console errors on fresh loads, correct `srcSet` ladders,
+  computed styles, server-rendered HTML, and proposal-mode gating. What was
+  **not** verified: actual appearance, real crops, spacing at each breakpoint,
+  scroll smoothness, and the pinned GSAP sequence in motion. **A session with
+  working screenshots should re-check all of that before the client sees it.**
+- The site is still built on placeholder imagery. Its credibility with the
+  actual client depends on swapping in their real renders — and their current
+  render library is not strong enough, which is itself worth raising with them.
+- `ImmersiveReveal`'s 260% pin has not been felt on a real trackpad; the
+  stagger timings are reasoned, not tuned.
+- The contact form is still UI-only (no endpoint, no email address published).
+- `public/renders/` is now dead weight in the repo (~5MB). Kept deliberately —
+  they are the client's assets and the brief forbids deleting them.
+- Portfolio labels are descriptive rather than real project names, because no
+  verified project names exist.
+
 ## Next Recommended Tasks
 
 1. ~~Deploy to Vercel and put the preview URL in the README~~ — done, see
@@ -358,8 +501,17 @@ Motion:
 5. Add reduced-motion QA pass across every section.
 6. Consider adding a "Studio" and "Projects" landing routes if the redesign
    scope expands beyond the 3D Renders page.
-7. Do a pixel-level visual QA pass at 375/430/768/1024/1440/1920px (session 3
-   could only do structural QA — no working screenshot tool available).
+7. **Highest priority: a real visual QA pass at 375/430/768/1024/1440/1920px in
+   an environment with working screenshots.** Sessions 3 and 4 could only
+   verify structurally (see "Remaining weaknesses"). Pay particular attention
+   to the hero crop, the Portfolio full-bleed escape row, the 260% pinned
+   ImmersiveReveal sequence, and the FeatureExplorer zoom crops.
+8. Ask the client whether they have higher-resolution originals *off* the Jimdo
+   CMS (their source render files, not the CDN copies). The CDN caps at
+   1820px, which is the single biggest constraint on how good this can look
+   with real work in it.
+9. Swap `lib/data/imagery.ts` to client-owned renders once supplied, and
+   re-tune focal points.
 
 ## Commands
 

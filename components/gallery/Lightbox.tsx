@@ -88,10 +88,11 @@ export function Lightbox({ items, index, onClose, onChange }: Props) {
                 className="relative aspect-[16/10] w-full max-w-6xl"
               >
                 <Image
-                  src={item.image}
+                  src={item.image.src}
                   alt={item.label}
                   fill
                   sizes="90vw"
+                  quality={90}
                   className="object-contain"
                   priority
                 />

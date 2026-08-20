@@ -7,6 +7,7 @@ import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { RevealText } from "@/components/motion/RevealText";
 import { easePremium } from "@/lib/motion";
 import { studio } from "@/lib/constants";
+import { img } from "@/lib/data/imagery";
 
 export function MarbellaSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -62,14 +63,16 @@ export function MarbellaSection() {
         </div>
 
         <div className="md:col-span-7">
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md bg-stone/40 md:aspect-[5/6]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone/40 md:aspect-[5/6]">
             <motion.div style={{ y }} className="absolute inset-0 -top-[6%] h-[112%]">
               <Image
-                src="/renders/render-03.jpg"
-                alt="Marbella architectural interior"
+                src={img.andalusianVault.src}
+                alt="Whitewashed Andalusian vaulted passage"
                 fill
+                quality={86}
                 sizes="(min-width:768px) 55vw, 100vw"
                 className="object-cover"
+                style={{ objectPosition: img.andalusianVault.focal }}
               />
             </motion.div>
             <div className="absolute inset-x-6 bottom-6 flex items-end justify-between text-white/80">

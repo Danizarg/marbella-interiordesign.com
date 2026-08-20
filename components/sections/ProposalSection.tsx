@@ -39,7 +39,7 @@ export function ProposalSection() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 gap-12 rounded-lg border border-white/10 bg-white/[0.02] p-8 md:grid-cols-12 md:gap-10 md:p-14">
+        <div className="grid grid-cols-1 gap-12 border border-white/12 bg-white/[0.02] p-8 md:grid-cols-12 md:gap-10 md:p-14">
           {/* Left: pricing */}
           <div className="md:col-span-6">
             <div className="eyebrow mb-6 text-white/50">Investment</div>
@@ -112,7 +112,7 @@ export function ProposalSection() {
                   }}
                   className="flex items-start gap-4"
                 >
-                  <span className="mt-[3px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/25 text-white/70">
+                  <span className="mt-[3px] flex h-5 w-5 shrink-0 items-center justify-center border border-white/25 text-white/70">
                     <Check size={12} />
                   </span>
                   <span className="text-[15px] text-white/80">{item}</span>
@@ -120,11 +120,21 @@ export function ProposalSection() {
               ))}
             </ul>
 
-            <p className="mt-10 text-xs leading-relaxed text-white/40">
-              Typical bespoke redesign pricing reflects what web studios and
-              freelancers commonly charge in this segment. It is not a prior
-              quotation from any specific supplier.
-            </p>
+            <div className="mt-10 space-y-4 border-t border-white/10 pt-8 text-xs leading-relaxed text-white/40">
+              <p>
+                <span className="text-white/70">On the imagery:</span> the
+                photographs in this prototype are licensed placeholders, chosen
+                to show the layout at its intended quality. On the live site
+                they are replaced by the studio's own renders — supplied at the
+                highest resolution available, which is where this design will
+                look its best.
+              </p>
+              <p>
+                Typical bespoke redesign pricing reflects what web studios and
+                freelancers commonly charge in this segment. It is not a prior
+                quotation from any specific supplier.
+              </p>
+            </div>
           </div>
         </div>
       </div>

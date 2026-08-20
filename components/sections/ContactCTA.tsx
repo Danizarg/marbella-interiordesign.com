@@ -56,7 +56,7 @@ export function ContactCTA() {
               e.preventDefault();
               setSubmitted(true);
             }}
-            className="grid grid-cols-1 gap-6 rounded-md border border-ink/10 bg-surface p-8 md:p-10"
+            className="grid grid-cols-1 gap-6 border border-ink/12 bg-surface p-8 md:p-10"
           >
             <div className="eyebrow">Discuss your project</div>
 

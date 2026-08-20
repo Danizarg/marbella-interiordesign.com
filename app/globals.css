@@ -53,11 +53,15 @@ body {
   .container-reading {
     @apply mx-auto w-full max-w-reading;
   }
+  /* Three deliberate rhythms rather than one repeated everywhere. */
   .section-y {
-    @apply py-20 md:py-24 lg:py-28;
+    @apply py-24 md:py-32 lg:py-40;
   }
   .section-y-tight {
-    @apply py-14 md:py-16 lg:py-20;
+    @apply py-16 md:py-20 lg:py-24;
+  }
+  .section-y-air {
+    @apply py-32 md:py-44 lg:py-56;
   }
   .eyebrow {
     @apply font-sans text-[11px] uppercase tracking-eyebrow text-muted;
@@ -81,21 +85,32 @@ body {
   .lede {
     @apply font-sans text-base md:text-lg text-muted leading-[1.55];
   }
+  /* Squared geometry — pill buttons read as generic template UI. */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-canvas transition-all ease-premium hover:-translate-y-0.5;
+    @apply inline-flex items-center gap-2 bg-ink px-8 py-4 text-[13px] font-medium tracking-wide text-canvas transition-colors ease-premium;
   }
   .btn-primary:hover {
-    background: rgb(26 27 30);
+    background: rgb(38 39 43);
   }
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium text-ink transition-all ease-premium hover:-translate-y-0.5;
-    border-color: rgb(var(--color-ink) / 0.15);
+    @apply inline-flex items-center gap-2 border px-8 py-4 text-[13px] font-medium tracking-wide text-ink transition-colors ease-premium;
+    border-color: rgb(var(--color-ink) / 0.2);
   }
   .btn-ghost:hover {
-    border-color: rgb(var(--color-ink) / 0.4);
+    border-color: rgb(var(--color-ink) / 0.55);
   }
   .btn-invert {
-    @apply inline-flex items-center gap-2 rounded-full bg-canvas px-6 py-3 text-sm font-medium text-ink transition-all ease-premium hover:-translate-y-0.5;
+    @apply inline-flex items-center gap-2 bg-canvas px-8 py-4 text-[13px] font-medium tracking-wide text-ink transition-opacity ease-premium hover:opacity-90;
+  }
+
+  /* Rule used to open sections — replaces the repeated eyebrow-only pattern. */
+  .rule-top {
+    @apply border-t pt-8;
+    border-color: rgb(var(--color-ink) / 0.14);
+  }
+  .rule-top-invert {
+    @apply border-t pt-8;
+    border-color: rgb(255 255 255 / 0.18);
   }
 }
 
