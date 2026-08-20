@@ -149,9 +149,17 @@ Google Fonts loaded via `next/font/google`: **Fraunces** (display serif) and
 ### Not Started
 - Real email address collection (business does not publish one publicly — form is UI-only)
 - Real project titles/locations for portfolio items (using neutral labels)
-- Deployment (repo is only local + GitHub; not deployed to Vercel yet — needs
-  the account owner to run `vercel login` interactively, a Claude session
-  cannot complete that browser auth flow)
+
+## Deployment
+
+Live on Vercel: **https://marbella-interiordesign-com.vercel.app**
+Proposal mode: **https://marbella-interiordesign-com.vercel.app/?proposal=true**
+
+Deployed via the Vercel dashboard's GitHub import (user-driven, not CLI) —
+auto-deploys on every push to `main`. Verified 2026-08-20: page content,
+`?proposal=true` pricing section (€1,500+ vs €300, with the "not a prior
+quotation" disclaimer), and no console errors, all confirmed against the
+live production URL.
 
 ## Sections
 
@@ -340,8 +348,8 @@ Motion:
 
 ## Next Recommended Tasks
 
-1. Deploy to Vercel and put the preview URL (with and without `?proposal=true`)
-   in the README for easy client sharing.
+1. ~~Deploy to Vercel and put the preview URL in the README~~ — done, see
+   **Deployment** above.
 2. Ask the client for a public email + verified project titles, then hydrate
    `lib/constants.ts` and `lib/data/portfolio.ts`.
 3. Wire the contact form to a real endpoint (Resend / Formspree / Vercel
@@ -350,6 +358,8 @@ Motion:
 5. Add reduced-motion QA pass across every section.
 6. Consider adding a "Studio" and "Projects" landing routes if the redesign
    scope expands beyond the 3D Renders page.
+7. Do a pixel-level visual QA pass at 375/430/768/1024/1440/1920px (session 3
+   could only do structural QA — no working screenshot tool available).
 
 ## Commands
 
@@ -428,21 +438,21 @@ tree, and both continuity docs were intact and matched — no drift between
   so QA here was structural (DOM text, network, console) rather than pixel-
   level visual — a follow-up session with working screenshots should still do
   a pixel pass across the breakpoints called out in `MASTER_PROMPT.md`.
-- Did **not** deploy to Vercel: `vercel login` requires an interactive browser
-  auth flow tied to the account owner's identity, which a Claude session
-  cannot complete on the user's behalf. This remains the top blocker for
-  "Next Recommended Tasks" item 1.
+- Did not deploy directly (no CLI login available in-session); user deployed
+  via the Vercel dashboard's GitHub import instead. Confirmed the resulting
+  live URL (`https://marbella-interiordesign-com.vercel.app`) serves the site
+  correctly, including `?proposal=true` mode, and updated `README.md` +
+  this file's **Deployment** section with the URLs. **Next Recommended Tasks**
+  item 1 is now complete.
 - Committed the `package.json`/`package-lock.json` Next.js bump.
 
 **Where work stopped:**
-- Same as before: fully assembled, buildable, unblocked except for the human
-  step of Vercel login + deploy.
+- Site is live and publicly reachable. Fully assembled, buildable, deployed.
 
 **Recommended next action:**
-- User runs `vercel login` (or connects the GitHub repo directly in the
-  Vercel dashboard) and deploys; a future Claude session can then update this
-  file and the README with the live preview URLs. After that, items 2–6 in
-  **Next Recommended Tasks** remain untouched.
+- Items 2–6 in **Next Recommended Tasks** remain: client email + verified
+  project titles, wiring the contact form to a real endpoint, OG image,
+  reduced-motion QA pass, possible additional routes.
 
 ---
 

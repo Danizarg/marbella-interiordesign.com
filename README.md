@@ -4,6 +4,9 @@ A premium, cinematic redesign concept for
 [marbella-interiordesign.com/3d-renders](https://www.marbella-interiordesign.com/3d-renders/),
 built as a live sales demo for the studio's owner.
 
+**Live:** [marbella-interiordesign-com.vercel.app](https://marbella-interiordesign-com.vercel.app)
+· **Proposal / sales mode:** [marbella-interiordesign-com.vercel.app/?proposal=true](https://marbella-interiordesign-com.vercel.app/?proposal=true)
+
 ## Tech Stack
 
 - **Next.js 15** (App Router) · **React 19** · **TypeScript** (strict)
@@ -95,10 +98,9 @@ Then read `MASTER_PROMPT.md` and `CLAUDE_CONTEXT.md` before making changes.
 
 ## Deployment
 
-Not deployed by default. Recommended: deploy to
-[Vercel](https://vercel.com/new) — this is a stock Next.js 15 app with no
-special runtime requirements. After deployment, share the preview URL with
-`?proposal=true` for the client presentation.
+Deployed on Vercel: https://marbella-interiordesign-com.vercel.app
+(auto-deploys from `main` on push). Share the URL with `?proposal=true`
+appended for the client presentation.
 
 ## Assets & Content
 
