@@ -149,7 +149,9 @@ Google Fonts loaded via `next/font/google`: **Fraunces** (display serif) and
 ### Not Started
 - Real email address collection (business does not publish one publicly — form is UI-only)
 - Real project titles/locations for portfolio items (using neutral labels)
-- Deployment (repo is only local + GitHub; not deployed to Vercel yet)
+- Deployment (repo is only local + GitHub; not deployed to Vercel yet — needs
+  the account owner to run `vercel login` interactively, a Claude session
+  cannot complete that browser auth flow)
 
 ## Sections
 
@@ -397,6 +399,50 @@ npm run lint
 **Recommended next action:**
 - See **Next Recommended Tasks** above. Highest priority: deploy to Vercel and
   share preview URL with the client.
+
+## Session 3 — cross-PC handoff (2026-08-20)
+
+**Context recovery:** repo did not exist on this machine; cloned fresh from
+`https://github.com/Danizarg/marbella-interiordesign.com`. History, working
+tree, and both continuity docs were intact and matched — no drift between
+`CLAUDE_CONTEXT.md` and the actual code.
+
+**What was done:**
+- `npm install`, then bumped `next` from the committed `^15.1.11` to the
+  `15.5.23` security-backport release (still Next 15 / App Router / React 19,
+  no breaking changes) — this clears the critical/high advisories that were
+  open against 15.1.x. Remaining `npm audit` findings (`postcss`, `sharp`) are
+  transitive deps bundled *inside* `next`'s own `node_modules` and only have a
+  fix via the Next **16** major, which is a breaking jump outside this
+  session's scope — left as-is per explicit instruction not to force-upgrade.
+- `npm run build` verified clean (compiles, type-checks, lints, prerenders all
+  4 routes).
+- Added a `marbella-dev` entry to the sibling `glucgp` repo's
+  `.claude/launch.json` (this machine drives browser previews from a fixed
+  working directory) running on port 3300 via `npm --prefix ... run dev -- -p
+  3300`, and used it to load the site in-browser: verified full page text for
+  every section, `?proposal=true` mode (shows the €1,500+ vs €300 framing with
+  the "not a prior quotation" disclaimer intact), and a 375px mobile viewport
+  — no console errors, all images/fonts/chunks 200 OK. Note: this session's
+  screenshot capability was unavailable (Browser pane failed to composite),
+  so QA here was structural (DOM text, network, console) rather than pixel-
+  level visual — a follow-up session with working screenshots should still do
+  a pixel pass across the breakpoints called out in `MASTER_PROMPT.md`.
+- Did **not** deploy to Vercel: `vercel login` requires an interactive browser
+  auth flow tied to the account owner's identity, which a Claude session
+  cannot complete on the user's behalf. This remains the top blocker for
+  "Next Recommended Tasks" item 1.
+- Committed the `package.json`/`package-lock.json` Next.js bump.
+
+**Where work stopped:**
+- Same as before: fully assembled, buildable, unblocked except for the human
+  step of Vercel login + deploy.
+
+**Recommended next action:**
+- User runs `vercel login` (or connects the GitHub repo directly in the
+  Vercel dashboard) and deploys; a future Claude session can then update this
+  file and the README with the live preview URLs. After that, items 2–6 in
+  **Next Recommended Tasks** remain untouched.
 
 ---
 
